@@ -1,25 +1,63 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>QR Kodlu Hediye Sistemi</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR Hediyen</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
       text-align: center;
+      padding: 30px;
     }
 
     #cak {
       display: none;
-      margin-top: 20px;
+      margin-top: 30px;
+    }
+
+    .wheel {
+      margin: 20px auto;
+      width: 250px;
+      height: 250px;
+      border: 10px solid #ccc;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(
+        #f9d423 0% 20%,
+        #ff4e50 20% 40%,
+        #24c6dc 40% 60%,
+        #abecd6 60% 80%,
+        #fcb045 80% 100%
+      );
+      animation: none;
+    }
+
+    .pointer {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid black;
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(1440deg);
+      }
     }
 
     button {
       padding: 10px 20px;
       font-size: 16px;
-      margin-top: 10px;
+      margin-top: 15px;
       cursor: pointer;
     }
 
@@ -39,18 +77,18 @@
 <body>
   <h1>Yorum Yap ve Hediye Kazan!</h1>
   <p>
-    Aşağıdaki bağlantıya tıklayarak Google Yorum sayfamıza ulaşabilirsiniz:
+    <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
+      👉 Yorum Yapmak İçin Tıkla
+    </a>
   </p>
-  <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
-    👉 Yorum Yapmak İçin Tıkla
-  </a>
 
-  <h2>Yorum yaptıktan sonra işletme şifresini gir:</h2>
-  <input type="password" id="sifre" placeholder="Şifreyi girin">
+  <h3>Yorum yaptıktan sonra işletme şifresini gir:</h3>
+  <input type="password" id="sifre" placeholder="Şifreyi girin" />
   <button onclick="kontrolEt()">Giriş Yap</button>
 
   <div id="cak">
-    <h3>🎁 Hediye Çarkını Çevir!</h3>
+    <div class="pointer"></div>
+    <div class="wheel" id="wheel"></div>
     <button onclick="hediyeCek()">Çarkı Çevir</button>
     <p id="sonuc"></p>
   </div>
@@ -58,8 +96,11 @@
   <script>
     const dogruSifre = "1234";
     const hediyeler = [
-      "Küçük Kahve ☕", "Tatlı İkramı 🍰", "Ücretsiz Çay 🍵",
-      "Bir Sonraki Alışverişte %10 İndirim 🛍️", "Sürpriz Hediye 🎉"
+      "Küçük Kahve ☕",
+      "Tatlı İkramı 🍰",
+      "Ücretsiz Çay 🍵",
+      "Bir Sonraki Alışverişte %10 İndirim 🛍️",
+      "Sürpriz Hediye 🎉"
     ];
 
     function kontrolEt() {
@@ -67,13 +108,21 @@
       if (sifre === dogruSifre) {
         document.getElementById("cak").style.display = "block";
       } else {
-        alert("Şifre yanlış. Lütfen işletmeden alın.");
+        alert("Şifre yanlış. Lütfen işletmeden alınız.");
       }
     }
 
     function hediyeCek() {
-      const sonuc = hediyeler[Math.floor(Math.random() * hediyeler.length)];
-      document.getElementById("sonuc").textContent = "🎉 Tebrikler! Kazandığınız: " + sonuc;
+      const wheel = document.getElementById("wheel");
+      wheel.style.animation = "spin 3s ease-out";
+
+      // Animasyon süresi sonunda hediye belirle
+      setTimeout(() => {
+        wheel.style.animation = "none";
+        const kazanan = hediyeler[Math.floor(Math.random() * hediyeler.length)];
+        document.getElementById("sonuc").textContent =
+          "🎉 Tebrikler! Kazandığınız: " + kazanan;
+      }, 3000);
     }
   </script>
 </body>
