@@ -2,187 +2,170 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hediye Çarkı</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
       text-align: center;
       padding: 20px;
+      margin: 0;
+      color: #333;
     }
 
-    .btn {
-      cursor: pointer;
-      padding: 12px 24px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      margin: 10px;
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
     }
 
-    .btn-primary {
-      background: #007bff;
-      color: white;
+    a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
     }
 
-    .btn-spin {
-      background: #28a745;
-      color: white;
-      font-size: 20px;
-      margin-top: 20px;
+    a:hover {
+      text-decoration: underline;
     }
 
-    #login input {
-      padding: 10px;
+    input[type="password"], button {
       font-size: 16px;
-      width: 160px;
+      padding: 12px;
+      margin: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 300px;
+      box-sizing: border-box;
     }
 
-    #wheel-container {
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #cak {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .wheel-container {
       position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 30px auto;
+      width: 250px;
+      height: 250px;
+      margin: 0 auto;
     }
 
-    #wheel {
+    .wheel {
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      position: relative;
-      border: 10px solid #444;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      transform: rotate(0deg);
-      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+      border: 6px solid #ccc;
+      background-image: conic-gradient(
+        #ffd54f 0% 25%,
+        #4fc3f7 25% 50%,
+        #aed581 50% 75%,
+        #ff8a65 75% 100%
+      );
+      transition: transform 4s ease-out;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
     }
 
-    #pointer {
+    .pointer {
       width: 0;
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-bottom: 30px solid red;
+      border-bottom: 30px solid #444;
       position: absolute;
-      top: -30px;
-      left: calc(50% - 20px);
-      z-index: 10;
-    }
-
-    .segment {
-      position: absolute;
-      width: 50%;
-      height: 50%;
-      top: 50%;
+      top: -35px;
       left: 50%;
-      transform-origin: 0% 0%;
+      transform: translateX(-50%);
     }
 
-    #prize {
-      font-size: 22px;
+    #sonuc {
+      margin-top: 20px;
+      font-size: 18px;
       font-weight: bold;
-      margin-top: 50px;
-      min-height: 40px;
+      color: #388e3c;
     }
 
-    @media (max-width: 400px) {
-      #wheel-container {
-        width: 250px;
-        height: 250px;
-      }
+    @media (max-width: 500px) {
+      h1 { font-size: 1.5rem; }
+      input, button { font-size: 15px; width: 90%; }
+      .wheel-container { width: 200px; height: 200px; }
     }
   </style>
 </head>
 <body>
+  <h1>Yorum Yap, Hediye Kazan!</h1>
+  <p>
+    <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
+      👉 Google Yorum Sayfasına Git
+    </a>
+  </p>
 
-  <h2>🎁 Google Yorum Yap, Şifreyi Al, Hediye Kazan!</h2>
+  <h3>Yorum sonrası işletmenin verdiği şifreyi gir:</h3>
+  <input type="password" id="sifre" placeholder="Şifre" />
+  <button onclick="kontrolEt()">Giriş Yap</button>
 
-  <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
-    <button class="btn btn-primary">⭐ Google Yorum Yap</button>
-  </a>
-
-  <div id="login">
-    <input type="password" id="password" placeholder="Şifreyi girin" />
-    <button onclick="checkPassword()" class="btn btn-primary">Giriş Yap</button>
+  <div id="cak">
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel"></div>
+    </div>
+    <button id="cevirBtn" onclick="cevir()">🎁 Çarkı Çevir</button>
+    <p id="sonuc"></p>
   </div>
-
-  <div id="wheel-container" style="display:none;">
-    <div id="pointer"></div>
-    <div id="wheel"></div>
-    <button id="spin" class="btn btn-spin">Çarkı Çevir</button>
-  </div>
-
-  <div id="prize"></div>
-
-  <audio id="click-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_887fd51a1d.mp3" preload="auto"></audio>
 
   <script>
-    const password = "1234";
-    const prizes = ["Anahtarlık", "Çakmak", "Kalem", "Not Defteri"];
-    const wheel = document.getElementById("wheel");
-    const container = document.getElementById("wheel-container");
-    const spinBtn = document.getElementById("spin");
-    const prizeText = document.getElementById("prize");
-    const clickSound = document.getElementById("click-sound");
-    let hasSpun = false;
+    const dogruSifre = "1234";
+    const hediyeler = [
+      "Anahtarlık 🔑",
+      "Çakmak 🔥",
+      "Kalem ✒️",
+      "Not Defteri 📓"
+    ];
+    let cevrildi = false;
 
-    function checkPassword() {
-      const input = document.getElementById("password").value;
-      if (input === password) {
-        document.getElementById("login").style.display = "none";
-        container.style.display = "block";
-        drawWheel();
+    function kontrolEt() {
+      const sifre = document.getElementById("sifre").value;
+      if (sifre === dogruSifre) {
+        document.getElementById("cak").style.display = "block";
       } else {
-        alert("Şifre yanlış!");
+        alert("Şifre hatalı. Lütfen işletmeden tekrar isteyin.");
       }
     }
 
-    function drawWheel() {
-      const angle = 360 / prizes.length;
-      const colors = ['#ff9999', '#ffd699', '#99e699', '#99ccff'];
-      for (let i = 0; i < prizes.length; i++) {
-        const segment = document.createElement("div");
-        segment.className = "segment";
-        segment.style.transform = `rotate(${i * angle}deg) skewY(-${90 - angle}deg)`;
-        segment.style.background = colors[i % colors.length];
-        wheel.appendChild(segment);
-      }
-    }
-
-    function spinWheel() {
-      if (hasSpun) return;
-
-      let spins = 5;
-      let prizeIndex = Math.floor(Math.random() * prizes.length);
-      let degree = 360 * spins + (360 / prizes.length) * prizeIndex + (360 / prizes.length) / 2;
-
-      let rotation = 0;
-      const duration = 4000;
-      const start = performance.now();
-
-      function animate(time) {
-        let progress = (time - start) / duration;
-        if (progress < 1) {
-          let ease = 1 - Math.pow(1 - progress, 3);
-          rotation = ease * degree;
-          wheel.style.transform = `rotate(${rotation}deg)`;
-          if (progress % 0.1 < 0.02) clickSound.play();
-          requestAnimationFrame(animate);
-        } else {
-          wheel.style.transform = `rotate(${degree}deg)`;
-          prizeText.innerHTML = `🎉 Tebrikler! Kazandığınız: ${prizes[prizeIndex]} 🎁`;
-          hasSpun = true;
-          spinBtn.disabled = true;
-          spinBtn.style.opacity = 0.5;
-        }
+    function cevir() {
+      if (cevrildi) {
+        alert("Çark sadece bir kez çevrilebilir!");
+        return;
       }
 
-      requestAnimationFrame(animate);
-    }
+      const wheel = document.getElementById("wheel");
+      const derece = 3600 + Math.floor(Math.random() * 360);
+      wheel.style.transform = `rotate(${derece}deg)`;
 
-    spinBtn.addEventListener("click", spinWheel);
+      const sektor = Math.floor((derece % 360) / 90); // 4 dilim
+      const kazanan = hediyeler[sektor];
+
+      setTimeout(() => {
+        document.getElementById("sonuc").textContent =
+          "🎉 Tebrikler! Kazandığınız: " + kazanan;
+        document.getElementById("cevirBtn").disabled = true;
+        cevrildi = true;
+      }, 4000);
+    }
   </script>
-
 </body>
 </html>
