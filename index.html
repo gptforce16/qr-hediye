@@ -4,6 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>QR Kodlu Hediye Sistemi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #cak {
+      display: none;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    #sonuc {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: green;
+    }
+  </style>
 </head>
 <body>
   <h1>Yorum Yap ve Hediye Kazan!</h1>
@@ -11,22 +42,24 @@
     Aşağıdaki bağlantıya tıklayarak Google Yorum sayfamıza ulaşabilirsiniz:
   </p>
   <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
-    Yorum Yapmak İçin Tıkla
+    👉 Yorum Yapmak İçin Tıkla
   </a>
 
   <h2>Yorum yaptıktan sonra işletme şifresini gir:</h2>
   <input type="password" id="sifre" placeholder="Şifreyi girin">
   <button onclick="kontrolEt()">Giriş Yap</button>
 
-  <div id="cak" style="display:none; margin-top:20px;">
-    <button onclick="hediyeCek()">🎁 Hediye Çarkını Çevir</button>
+  <div id="cak">
+    <h3>🎁 Hediye Çarkını Çevir!</h3>
+    <button onclick="hediyeCek()">Çarkı Çevir</button>
     <p id="sonuc"></p>
   </div>
 
   <script>
     const dogruSifre = "1234";
     const hediyeler = [
-      "Küçük Kahve", "Tatlı İkramı", "Ücretsiz Çay", "Bir Sonraki Alışverişte %10 İndirim", "Sürpriz Hediye"
+      "Küçük Kahve ☕", "Tatlı İkramı 🍰", "Ücretsiz Çay 🍵",
+      "Bir Sonraki Alışverişte %10 İndirim 🛍️", "Sürpriz Hediye 🎉"
     ];
 
     function kontrolEt() {
@@ -40,7 +73,7 @@
 
     function hediyeCek() {
       const sonuc = hediyeler[Math.floor(Math.random() * hediyeler.length)];
-      document.getElementById("sonuc").textContent = "Tebrikler! Kazandığınız: " + sonuc;
+      document.getElementById("sonuc").textContent = "🎉 Tebrikler! Kazandığınız: " + sonuc;
     }
   </script>
 </body>
