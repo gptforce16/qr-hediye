@@ -3,12 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR Hediyen</title>
+  <title>Hediye Çarkı</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
       text-align: center;
-      padding: 30px;
+      padding: 20px;
+      margin: 0;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    input[type="password"], button {
+      font-size: 16px;
+      padding: 12px;
+      margin: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 300px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
     }
 
     #cak {
@@ -16,21 +58,26 @@
       margin-top: 30px;
     }
 
-    .wheel {
-      margin: 20px auto;
+    .wheel-container {
+      position: relative;
       width: 250px;
       height: 250px;
-      border: 10px solid #ccc;
+      margin: 0 auto;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      position: relative;
-      background: conic-gradient(
-        #f9d423 0% 20%,
-        #ff4e50 20% 40%,
-        #24c6dc 40% 60%,
-        #abecd6 60% 80%,
-        #fcb045 80% 100%
+      border: 6px solid #ccc;
+      background-image: conic-gradient(
+        #ffd54f 0% 25%,
+        #4fc3f7 25% 50%,
+        #aed581 50% 75%,
+        #ff8a65 75% 100%
       );
-      animation: none;
+      transition: transform 4s ease-out;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
     }
 
     .pointer {
@@ -38,91 +85,86 @@
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-bottom: 30px solid black;
+      border-bottom: 30px solid #444;
       position: absolute;
       top: -35px;
       left: 50%;
       transform: translateX(-50%);
     }
 
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(1440deg);
-      }
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-top: 15px;
-      cursor: pointer;
-    }
-
-    input {
-      padding: 8px;
-      font-size: 14px;
-    }
-
     #sonuc {
+      margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      margin-top: 20px;
-      color: green;
+      color: #388e3c;
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 1.5rem; }
+      input, button { font-size: 15px; width: 90%; }
+      .wheel-container { width: 200px; height: 200px; }
     }
   </style>
 </head>
 <body>
-  <h1>Yorum Yap ve Hediye Kazan!</h1>
+  <h1>Yorum Yap, Hediye Kazan!</h1>
   <p>
     <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
-      👉 Yorum Yapmak İçin Tıkla
+      👉 Google Yorum Sayfasına Git
     </a>
   </p>
 
-  <h3>Yorum yaptıktan sonra işletme şifresini gir:</h3>
-  <input type="password" id="sifre" placeholder="Şifreyi girin" />
+  <h3>Yorum sonrası işletmenin verdiği şifreyi gir:</h3>
+  <input type="password" id="sifre" placeholder="Şifre" />
   <button onclick="kontrolEt()">Giriş Yap</button>
 
   <div id="cak">
-    <div class="pointer"></div>
-    <div class="wheel" id="wheel"></div>
-    <button onclick="hediyeCek()">Çarkı Çevir</button>
+    <div class="wheel-container">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel"></div>
+    </div>
+    <button id="cevirBtn" onclick="cevir()">🎁 Çarkı Çevir</button>
     <p id="sonuc"></p>
   </div>
 
   <script>
     const dogruSifre = "1234";
     const hediyeler = [
-      "Küçük Kahve ☕",
-      "Tatlı İkramı 🍰",
-      "Ücretsiz Çay 🍵",
-      "Bir Sonraki Alışverişte %10 İndirim 🛍️",
-      "Sürpriz Hediye 🎉"
+      "Anahtarlık 🔑",
+      "Çakmak 🔥",
+      "Kalem ✒️",
+      "Not Defteri 📓"
     ];
+    let cevrildi = false;
 
     function kontrolEt() {
       const sifre = document.getElementById("sifre").value;
       if (sifre === dogruSifre) {
         document.getElementById("cak").style.display = "block";
       } else {
-        alert("Şifre yanlış. Lütfen işletmeden alınız.");
+        alert("Şifre hatalı. Lütfen işletmeden tekrar isteyin.");
       }
     }
 
-    function hediyeCek() {
-      const wheel = document.getElementById("wheel");
-      wheel.style.animation = "spin 3s ease-out";
+    function cevir() {
+      if (cevrildi) {
+        alert("Çark sadece bir kez çevrilebilir!");
+        return;
+      }
 
-      // Animasyon süresi sonunda hediye belirle
+      const wheel = document.getElementById("wheel");
+      const derece = 3600 + Math.floor(Math.random() * 360);
+      wheel.style.transform = `rotate(${derece}deg)`;
+
+      const sektor = Math.floor((derece % 360) / 90); // 4 dilim
+      const kazanan = hediyeler[sektor];
+
       setTimeout(() => {
-        wheel.style.animation = "none";
-        const kazanan = hediyeler[Math.floor(Math.random() * hediyeler.length)];
         document.getElementById("sonuc").textContent =
           "🎉 Tebrikler! Kazandığınız: " + kazanan;
-      }, 3000);
+        document.getElementById("cevirBtn").disabled = true;
+        cevrildi = true;
+      }, 4000);
     }
   </script>
 </body>
