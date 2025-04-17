@@ -1,49 +1,41 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hediye Çarkı</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #f0f8ff;
+      background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
       text-align: center;
       padding: 20px;
     }
 
-    button {
+    .btn {
       cursor: pointer;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      margin: 10px;
     }
 
     .btn-primary {
       background: #007bff;
       color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 10px;
-      font-size: 18px;
-      margin-bottom: 20px;
     }
 
     .btn-spin {
       background: #28a745;
       color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 10px;
       font-size: 20px;
-      margin-top: 20px;
-    }
-
-    #login {
-      margin-top: 20px;
     }
 
     #login input {
       padding: 10px;
       font-size: 16px;
-      width: 150px;
+      width: 160px;
     }
 
     #wheel-container {
@@ -57,10 +49,11 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 8px solid #333;
       position: relative;
+      border: 10px solid #444;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: rotate(0deg);
       transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
     }
 
@@ -83,18 +76,30 @@
       top: 50%;
       left: 50%;
       transform-origin: 0% 0%;
-      text-align: right;
-      padding-right: 10px;
+      text-align: center;
       font-weight: bold;
       font-size: 16px;
-      color: #333;
-      line-height: 1.5;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #prize {
       font-size: 22px;
       font-weight: bold;
       margin-top: 30px;
+    }
+
+    @media (max-width: 400px) {
+      #wheel-container {
+        width: 250px;
+        height: 250px;
+      }
+
+      .segment {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -103,18 +108,18 @@
   <h2>🎁 Google Yorum Yap, Şifreyi Al, Hediye Kazan!</h2>
 
   <a href="https://search.google.com/local/writereview?placeid=ChIJ4WYrjj4UyhQR1M3BaWrMFoI" target="_blank">
-    <button class="btn-primary">⭐ Google Yorum Yap</button>
+    <button class="btn btn-primary">⭐ Google Yorum Yap</button>
   </a>
 
   <div id="login">
     <input type="password" id="password" placeholder="Şifreyi girin" />
-    <button onclick="checkPassword()" class="btn-primary">Giriş Yap</button>
+    <button onclick="checkPassword()" class="btn btn-primary">Giriş Yap</button>
   </div>
 
   <div id="wheel-container" style="display:none;">
     <div id="pointer"></div>
     <div id="wheel"></div>
-    <button id="spin" class="btn-spin">Çarkı Çevir</button>
+    <button id="spin" class="btn btn-spin">Çarkı Çevir</button>
   </div>
 
   <div id="prize"></div>
@@ -144,14 +149,15 @@
 
     function drawWheel() {
       const angle = 360 / prizes.length;
-      prizes.forEach((prize, i) => {
+      const colors = ['#ff9999', '#ffd699', '#99e699', '#99ccff'];
+      for (let i = 0; i < prizes.length; i++) {
         const segment = document.createElement("div");
         segment.className = "segment";
         segment.style.transform = `rotate(${i * angle}deg) skewY(-${90 - angle}deg)`;
-        segment.style.background = i % 2 === 0 ? "#ffe066" : "#ffdd99";
-        segment.innerHTML = `<div style="transform: skewY(${90 - angle}deg) rotate(${angle / 2}deg); padding-top: 50px;">${prize}</div>`;
+        segment.style.background = colors[i % colors.length];
+        segment.innerHTML = `<div style="transform: skewY(${90 - angle}deg) rotate(${angle / 2}deg); width:100px;">${prizes[i]}</div>`;
         wheel.appendChild(segment);
-      });
+      }
     }
 
     function spinWheel() {
@@ -159,7 +165,7 @@
 
       let spins = 5;
       let prizeIndex = Math.floor(Math.random() * prizes.length);
-      let degree = 360 * spins + (360 / prizes.length) * prizeIndex + 360 / (2 * prizes.length);
+      let degree = 360 * spins + (360 / prizes.length) * prizeIndex + (360 / prizes.length) / 2;
 
       let rotation = 0;
       const duration = 4000;
